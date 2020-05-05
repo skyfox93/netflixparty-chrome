@@ -1,10 +1,10 @@
 {
   "extName": {
-    "message": "Netflix Party",
-    "description": "Extension name"
+    "message": "Sidebar Video Chat (Jitsu)",
+    "description": "Open a video chat inside another page. Compatible with Netflix, Hulu, ect."
   },
   "extDescription": {
-    "message": "Watch Netflix remotely with friends",
+    "message": "Embedded Video Chat for netflix",
     "description": "Extension description"
   }
 }

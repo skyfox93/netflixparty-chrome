@@ -3,11 +3,13 @@
 
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
-  "version": "1.3.4",
+  "version": "0.0.0.5",
   "default_locale": "en",
   "permissions": [
     "activeTab",
-    "declarativeContent"
+    "declarativeContent",
+    "tabs",
+    "https://netlfix.com/*"
   ],
   "page_action": {
     "default_icon": {
@@ -19,7 +21,7 @@
   },
   "background": {
     "scripts": ["background.js"],
-    "persistent": false
+    "persistent": true
   },
   "icons": {
     "16": "icon.png",

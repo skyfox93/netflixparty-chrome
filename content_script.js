@@ -2,8 +2,8 @@
 
 (function() {
   // make sure the content script is only run once on the page
-  if (!window.netflixPartyLoaded) {
-    window.netflixPartyLoaded = true;
+  if (!window.videoChatInitiated) {
+      window.videoChatInitiated = true
 
     //////////////////////////////////////////////////////////////////////////
     // Vendor libraries                                                     //
@@ -30,886 +30,89 @@
     /* SHA256 (Chris Veness) */
     var Sha256={};Sha256.hash=function(t){t=t.utf8Encode();var r=[1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298],e=[1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225];t+=String.fromCharCode(128);for(var n=t.length/4+2,o=Math.ceil(n/16),a=new Array(o),h=0;o>h;h++){a[h]=new Array(16);for(var S=0;16>S;S++)a[h][S]=t.charCodeAt(64*h+4*S)<<24|t.charCodeAt(64*h+4*S+1)<<16|t.charCodeAt(64*h+4*S+2)<<8|t.charCodeAt(64*h+4*S+3)}a[o-1][14]=8*(t.length-1)/Math.pow(2,32),a[o-1][14]=Math.floor(a[o-1][14]),a[o-1][15]=8*(t.length-1)&4294967295;for(var u,f,c,i,d,R,p,y,x=new Array(64),h=0;o>h;h++){for(var O=0;16>O;O++)x[O]=a[h][O];for(var O=16;64>O;O++)x[O]=Sha256.σ1(x[O-2])+x[O-7]+Sha256.σ0(x[O-15])+x[O-16]&4294967295;u=e[0],f=e[1],c=e[2],i=e[3],d=e[4],R=e[5],p=e[6],y=e[7];for(var O=0;64>O;O++){var T=y+Sha256.Σ1(d)+Sha256.Ch(d,R,p)+r[O]+x[O],s=Sha256.Σ0(u)+Sha256.Maj(u,f,c);y=p,p=R,R=d,d=i+T&4294967295,i=c,c=f,f=u,u=T+s&4294967295}e[0]=e[0]+u&4294967295,e[1]=e[1]+f&4294967295,e[2]=e[2]+c&4294967295,e[3]=e[3]+i&4294967295,e[4]=e[4]+d&4294967295,e[5]=e[5]+R&4294967295,e[6]=e[6]+p&4294967295,e[7]=e[7]+y&4294967295}return Sha256.toHexStr(e[0])+Sha256.toHexStr(e[1])+Sha256.toHexStr(e[2])+Sha256.toHexStr(e[3])+Sha256.toHexStr(e[4])+Sha256.toHexStr(e[5])+Sha256.toHexStr(e[6])+Sha256.toHexStr(e[7])},Sha256.ROTR=function(t,r){return r>>>t|r<<32-t},Sha256.Σ0=function(t){return Sha256.ROTR(2,t)^Sha256.ROTR(13,t)^Sha256.ROTR(22,t)},Sha256.Σ1=function(t){return Sha256.ROTR(6,t)^Sha256.ROTR(11,t)^Sha256.ROTR(25,t)},Sha256.σ0=function(t){return Sha256.ROTR(7,t)^Sha256.ROTR(18,t)^t>>>3},Sha256.σ1=function(t){return Sha256.ROTR(17,t)^Sha256.ROTR(19,t)^t>>>10},Sha256.Ch=function(t,r,e){return t&r^~t&e},Sha256.Maj=function(t,r,e){return t&r^t&e^r&e},Sha256.toHexStr=function(t){for(var r,e="",n=7;n>=0;n--)r=t>>>4*n&15,e+=r.toString(16);return e},"undefined"==typeof String.prototype.utf8Encode&&(String.prototype.utf8Encode=function(){return unescape(encodeURIComponent(this))}),"undefined"==typeof String.prototype.utf8Decode&&(String.prototype.utf8Decode=function(){try{return decodeURIComponent(escape(this))}catch(t){return this}}),"undefined"!=typeof module&&module.exports&&(module.exports=Sha256),"function"==typeof define&&define.amd&&define([],function(){return Sha256});
 
-    //////////////////////////////////////////////////////////////////////////
-    // Version                                                              //
-    //////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////
+    // video library
+    !function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.JitsiMeetExternalAPI=t():e.JitsiMeetExternalAPI=t()}(window,(function(){return function(e){var t={};function n(r){if(t[r])return t[r].exports;var i=t[r]={i:r,l:!1,exports:{}};return e[r].call(i.exports,i,i.exports,n),i.l=!0,i.exports}return n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var i in e)n.d(r,i,function(t){return e[t]}.bind(null,i));return r},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="/libs/",n(n.s=6)}([function(e,t,n){"use strict";(function(e){n.d(t,"a",(function(){return s})),n.d(t,"b",(function(){return o})),n.d(t,"c",(function(){return a})),n.d(t,"d",(function(){return c})),n.d(t,"e",(function(){return u})),n.d(t,"f",(function(){return l})),n.d(t,"g",(function(){return h})),n.d(t,"h",(function(){return p}));var r=n(5);const i=n.n(r).a.getLogger(e);function s(e){return e.sendRequest({type:"devices",name:"getAvailableDevices"}).catch(e=>(i.error(e),{}))}function o(e){return e.sendRequest({type:"devices",name:"getCurrentDevices"}).catch(e=>(i.error(e),{}))}function a(e,t){return e.sendRequest({deviceType:t,type:"devices",name:"isDeviceChangeAvailable"})}function c(e){return e.sendRequest({type:"devices",name:"isDeviceListAvailable"})}function u(e){return e.sendRequest({type:"devices",name:"isMultipleAudioInputSupported"})}function l(e,t,n){return d(e,{id:n,kind:"audioinput",label:t})}function h(e,t,n){return d(e,{id:n,kind:"audiooutput",label:t})}function d(e,t){return e.sendRequest({type:"devices",name:"setDevice",device:t})}function p(e,t,n){return d(e,{id:n,kind:"videoinput",label:t})}}).call(this,"modules/API/external/functions.js")},function(e,t){var n={trace:0,debug:1,info:2,log:3,warn:4,error:5};o.consoleTransport=console;var r=[o.consoleTransport];o.addGlobalTransport=function(e){-1===r.indexOf(e)&&r.push(e)},o.removeGlobalTransport=function(e){var t=r.indexOf(e);-1!==t&&r.splice(t,1)};var i={};function s(){var e=arguments[0],t=arguments[1],s=Array.prototype.slice.call(arguments,2);if(!(n[t]<e.level))for(var o=!(e.options.disableCallerInfo||i.disableCallerInfo)&&function(){var e={methodName:"",fileLocation:"",line:null,column:null},t=new Error,n=t.stack?t.stack.split("\n"):[];if(!n||n.length<1)return e;var r=null;return n[3]&&(r=n[3].match(/\s*at\s*(.+?)\s*\((\S*)\s*:(\d*)\s*:(\d*)\)/)),!r||r.length<=4?(0===n[2].indexOf("log@")?e.methodName=n[3].substr(0,n[3].indexOf("@")):e.methodName=n[2].substr(0,n[2].indexOf("@")),e):(e.methodName=r[1],e.fileLocation=r[2],e.line=r[3],e.column=r[4],e)}(),a=r.concat(e.transports),c=0;c<a.length;c++){var u=a[c],l=u[t];if(l&&"function"==typeof l){var h=[];h.push((new Date).toISOString()),e.id&&h.push("["+e.id+"]"),o&&o.methodName.length>1&&h.push("<"+o.methodName+">: ");var d=h.concat(s);l.bind(u).apply(u,d)}}}function o(e,t,r,i){this.id=t,this.options=i||{},this.transports=r,this.transports||(this.transports=[]),this.level=n[e];for(var o=Object.keys(n),a=0;a<o.length;a++)this[o[a]]=s.bind(null,this,o[a])}o.setGlobalOptions=function(e){i=e||{}},o.prototype.setLevel=function(e){this.level=n[e]},e.exports=o,o.levels={TRACE:"trace",DEBUG:"debug",INFO:"info",LOG:"log",WARN:"warn",ERROR:"error"}},function(e,t,n){"use strict";var r,i="object"==typeof Reflect?Reflect:null,s=i&&"function"==typeof i.apply?i.apply:function(e,t,n){return Function.prototype.apply.call(e,t,n)};r=i&&"function"==typeof i.ownKeys?i.ownKeys:Object.getOwnPropertySymbols?function(e){return Object.getOwnPropertyNames(e).concat(Object.getOwnPropertySymbols(e))}:function(e){return Object.getOwnPropertyNames(e)};var o=Number.isNaN||function(e){return e!=e};function a(){a.init.call(this)}e.exports=a,a.EventEmitter=a,a.prototype._events=void 0,a.prototype._eventsCount=0,a.prototype._maxListeners=void 0;var c=10;function u(e){return void 0===e._maxListeners?a.defaultMaxListeners:e._maxListeners}function l(e,t,n,r){var i,s,o,a;if("function"!=typeof n)throw new TypeError('The "listener" argument must be of type Function. Received type '+typeof n);if(void 0===(s=e._events)?(s=e._events=Object.create(null),e._eventsCount=0):(void 0!==s.newListener&&(e.emit("newListener",t,n.listener?n.listener:n),s=e._events),o=s[t]),void 0===o)o=s[t]=n,++e._eventsCount;else if("function"==typeof o?o=s[t]=r?[n,o]:[o,n]:r?o.unshift(n):o.push(n),(i=u(e))>0&&o.length>i&&!o.warned){o.warned=!0;var c=new Error("Possible EventEmitter memory leak detected. "+o.length+" "+String(t)+" listeners added. Use emitter.setMaxListeners() to increase limit");c.name="MaxListenersExceededWarning",c.emitter=e,c.type=t,c.count=o.length,a=c,console&&console.warn&&console.warn(a)}return e}function h(){for(var e=[],t=0;t<arguments.length;t++)e.push(arguments[t]);this.fired||(this.target.removeListener(this.type,this.wrapFn),this.fired=!0,s(this.listener,this.target,e))}function d(e,t,n){var r={fired:!1,wrapFn:void 0,target:e,type:t,listener:n},i=h.bind(r);return i.listener=n,r.wrapFn=i,i}function p(e,t,n){var r=e._events;if(void 0===r)return[];var i=r[t];return void 0===i?[]:"function"==typeof i?n?[i.listener||i]:[i]:n?function(e){for(var t=new Array(e.length),n=0;n<t.length;++n)t[n]=e[n].listener||e[n];return t}(i):m(i,i.length)}function f(e){var t=this._events;if(void 0!==t){var n=t[e];if("function"==typeof n)return 1;if(void 0!==n)return n.length}return 0}function m(e,t){for(var n=new Array(t),r=0;r<t;++r)n[r]=e[r];return n}Object.defineProperty(a,"defaultMaxListeners",{enumerable:!0,get:function(){return c},set:function(e){if("number"!=typeof e||e<0||o(e))throw new RangeError('The value of "defaultMaxListeners" is out of range. It must be a non-negative number. Received '+e+".");c=e}}),a.init=function(){void 0!==this._events&&this._events!==Object.getPrototypeOf(this)._events||(this._events=Object.create(null),this._eventsCount=0),this._maxListeners=this._maxListeners||void 0},a.prototype.setMaxListeners=function(e){if("number"!=typeof e||e<0||o(e))throw new RangeError('The value of "n" is out of range. It must be a non-negative number. Received '+e+".");return this._maxListeners=e,this},a.prototype.getMaxListeners=function(){return u(this)},a.prototype.emit=function(e){for(var t=[],n=1;n<arguments.length;n++)t.push(arguments[n]);var r="error"===e,i=this._events;if(void 0!==i)r=r&&void 0===i.error;else if(!r)return!1;if(r){var o;if(t.length>0&&(o=t[0]),o instanceof Error)throw o;var a=new Error("Unhandled error."+(o?" ("+o.message+")":""));throw a.context=o,a}var c=i[e];if(void 0===c)return!1;if("function"==typeof c)s(c,this,t);else{var u=c.length,l=m(c,u);for(n=0;n<u;++n)s(l[n],this,t)}return!0},a.prototype.addListener=function(e,t){return l(this,e,t,!1)},a.prototype.on=a.prototype.addListener,a.prototype.prependListener=function(e,t){return l(this,e,t,!0)},a.prototype.once=function(e,t){if("function"!=typeof t)throw new TypeError('The "listener" argument must be of type Function. Received type '+typeof t);return this.on(e,d(this,e,t)),this},a.prototype.prependOnceListener=function(e,t){if("function"!=typeof t)throw new TypeError('The "listener" argument must be of type Function. Received type '+typeof t);return this.prependListener(e,d(this,e,t)),this},a.prototype.removeListener=function(e,t){var n,r,i,s,o;if("function"!=typeof t)throw new TypeError('The "listener" argument must be of type Function. Received type '+typeof t);if(void 0===(r=this._events))return this;if(void 0===(n=r[e]))return this;if(n===t||n.listener===t)0==--this._eventsCount?this._events=Object.create(null):(delete r[e],r.removeListener&&this.emit("removeListener",e,n.listener||t));else if("function"!=typeof n){for(i=-1,s=n.length-1;s>=0;s--)if(n[s]===t||n[s].listener===t){o=n[s].listener,i=s;break}if(i<0)return this;0===i?n.shift():function(e,t){for(;t+1<e.length;t++)e[t]=e[t+1];e.pop()}(n,i),1===n.length&&(r[e]=n[0]),void 0!==r.removeListener&&this.emit("removeListener",e,o||t)}return this},a.prototype.off=a.prototype.removeListener,a.prototype.removeAllListeners=function(e){var t,n,r;if(void 0===(n=this._events))return this;if(void 0===n.removeListener)return 0===arguments.length?(this._events=Object.create(null),this._eventsCount=0):void 0!==n[e]&&(0==--this._eventsCount?this._events=Object.create(null):delete n[e]),this;if(0===arguments.length){var i,s=Object.keys(n);for(r=0;r<s.length;++r)"removeListener"!==(i=s[r])&&this.removeAllListeners(i);return this.removeAllListeners("removeListener"),this._events=Object.create(null),this._eventsCount=0,this}if("function"==typeof(t=n[e]))this.removeListener(e,t);else if(void 0!==t)for(r=t.length-1;r>=0;r--)this.removeListener(e,t[r]);return this},a.prototype.listeners=function(e){return p(this,e,!0)},a.prototype.rawListeners=function(e){return p(this,e,!1)},a.listenerCount=function(e,t){return"function"==typeof e.listenerCount?e.listenerCount(t):f.call(e,t)},a.prototype.listenerCount=f,a.prototype.eventNames=function(){return this._eventsCount>0?r(this._events):[]}},function(e,t){e.exports=function(e){var t,n=e.scope,r=e.window,i=e.windowForEventListening||window,s={},o=[],a={},c=!1,u=function(e){var t;try{t=JSON.parse(e.data)}catch(e){return}if(t.postis&&t.scope===n){var r=s[t.method];if(r)for(var i=0;i<r.length;i++)r[i].call(null,t.params);else a[t.method]=a[t.method]||[],a[t.method].push(t.params)}};i.addEventListener("message",u,!1);var l={listen:function(e,t){s[e]=s[e]||[],s[e].push(t);var n=a[e];if(n)for(var r=s[e],i=0;i<r.length;i++)for(var o=0;o<n.length;o++)r[i].call(null,n[o]);delete a[e]},send:function(e){var t=e.method;(c||"__ready__"===e.method)&&r&&"function"==typeof r.postMessage?r.postMessage(JSON.stringify({postis:!0,scope:n,method:t,params:e.params}),"*"):o.push(e)},ready:function(e){c?e():setTimeout((function(){l.ready(e)}),50)},destroy:function(e){clearInterval(t),c=!1,i&&"function"==typeof i.removeEventListener&&i.removeEventListener("message",u),e&&e()}},h=+new Date+Math.random()+"";return t=setInterval((function(){l.send({method:"__ready__",params:h})}),50),l.listen("__ready__",(function(e){if(e===h){clearInterval(t),c=!0;for(var n=0;n<o.length;n++)l.send(o[n]);o=[]}else l.send({method:"__ready__",params:e})})),l}},function(e){e.exports={"google-auth":{matchPatterns:{url:"accounts.google.com"},target:"electron"},"dropbox-auth":{matchPatterns:{url:"dropbox.com/oauth2/authorize"},target:"electron"}}},function(e,t,n){var r=n(1),i=n(7),s={},o=[],a=r.levels.TRACE;e.exports={addGlobalTransport:function(e){r.addGlobalTransport(e)},removeGlobalTransport:function(e){r.removeGlobalTransport(e)},setGlobalOptions:function(e){r.setGlobalOptions(e)},getLogger:function(e,t,n){var i=new r(a,e,t,n);return e?(s[e]=s[e]||[],s[e].push(i)):o.push(i),i},setLogLevelById:function(e,t){for(var n=t?s[t]||[]:o,r=0;r<n.length;r++)n[r].setLevel(e)},setLogLevel:function(e){a=e;for(var t=0;t<o.length;t++)o[t].setLevel(e);for(var n in s){var r=s[n]||[];for(t=0;t<r.length;t++)r[t].setLevel(e)}},levels:r.levels,LogCollector:i}},function(e,t,n){e.exports=n(8).default},function(e,t,n){var r=n(1);function i(e,t){this.logStorage=e,this.stringifyObjects=!(!t||!t.stringifyObjects)&&t.stringifyObjects,this.storeInterval=t&&t.storeInterval?t.storeInterval:3e4,this.maxEntryLength=t&&t.maxEntryLength?t.maxEntryLength:1e4,Object.keys(r.levels).forEach(function(e){this[r.levels[e]]=function(){this._log.apply(this,arguments)}.bind(this,e)}.bind(this)),this.storeLogsIntervalID=null,this.queue=[],this.totalLen=0,this.outputCache=[]}i.prototype.stringify=function(e){try{return JSON.stringify(e)}catch(e){return"[object with circular refs?]"}},i.prototype.formatLogMessage=function(e){for(var t="",n=1,i=arguments.length;n<i;n++){var s=arguments[n];!this.stringifyObjects&&e!==r.levels.ERROR||"object"!=typeof s||(s=this.stringify(s)),t+=s,n!==i-1&&(t+=" ")}return t.length?t:null},i.prototype._log=function(){var e=arguments[1],t=this.formatLogMessage.apply(this,arguments);if(t){var n=this.queue[this.queue.length-1],r=n&&n.text;r===t?n.count+=1:(this.queue.push({text:t,timestamp:e,count:1}),this.totalLen+=t.length)}this.totalLen>=this.maxEntryLength&&this._flush(!0,!0)},i.prototype.start=function(){this._reschedulePublishInterval()},i.prototype._reschedulePublishInterval=function(){this.storeLogsIntervalID&&(window.clearTimeout(this.storeLogsIntervalID),this.storeLogsIntervalID=null),this.storeLogsIntervalID=window.setTimeout(this._flush.bind(this,!1,!0),this.storeInterval)},i.prototype.flush=function(){this._flush(!1,!0)},i.prototype._flush=function(e,t){this.totalLen>0&&(this.logStorage.isReady()||e)&&(this.logStorage.isReady()?(this.outputCache.length&&(this.outputCache.forEach(function(e){this.logStorage.storeLogs(e)}.bind(this)),this.outputCache=[]),this.logStorage.storeLogs(this.queue)):this.outputCache.push(this.queue),this.queue=[],this.totalLen=0),t&&this._reschedulePublishInterval()},i.prototype.stop=function(){this._flush(!1,!1)},e.exports=i},function(e,t,n){"use strict";n.r(t);var r=n(2),i=n.n(r);const s="org.jitsi.meet:",o="(//[^/?#]+)",a="([^?#]*)",c="^([a-z][a-z0-9\\.\\+-]*:)";function u(e){const t=new RegExp(`${c}+`,"gi"),n=t.exec(e);if(n){let r=n[n.length-1].toLowerCase();"http:"!==r&&"https:"!==r&&(r="https:"),(e=e.substring(t.lastIndex)).startsWith("//")&&(e=r+e)}return e}function l(e={}){const t=[];for(const n in e)try{t.push(`${n}=${encodeURIComponent(JSON.stringify(e[n]))}`)}catch(e){console.warn(`Error encoding ${n}: ${e}`)}return t}function h(e){const t={toString:d};let n,r,i;if(e=e.replace(/\s/g,""),(r=(n=new RegExp(c,"gi")).exec(e))&&(t.protocol=r[1].toLowerCase(),e=e.substring(n.lastIndex)),r=(n=new RegExp(`^${o}`,"gi")).exec(e)){let i=r[1].substring(2);e=e.substring(n.lastIndex);const s=i.indexOf("@");-1!==s&&(i=i.substring(s+1)),t.host=i;const o=i.lastIndexOf(":");-1!==o&&(t.port=i.substring(o+1),i=i.substring(0,o)),t.hostname=i}if((r=(n=new RegExp(`^${a}`,"gi")).exec(e))&&(i=r[1],e=e.substring(n.lastIndex)),i?i.startsWith("/")||(i=`/${i}`):i="/",t.pathname=i,e.startsWith("?")){let n=e.indexOf("#",1);-1===n&&(n=e.length),t.search=e.substring(0,n),e=e.substring(n)}else t.search="";return t.hash=e.startsWith("#")?e:"",t}function d(e){const{hash:t,host:n,pathname:r,protocol:i,search:s}=e||this;let o="";return i&&(o+=i),n&&(o+=`//${n}`),o+=r||"/",s&&(o+=s),t&&(o+=t),o}function p(e){let t;const n=h(u(t=e.serverURL&&e.room?new URL(e.room,e.serverURL).toString():e.room?e.room:e.url||""));if(!n.protocol){let t=e.protocol||e.scheme;t&&(t.endsWith(":")||(t+=":"),n.protocol=t)}let{pathname:r}=n;if(!n.host){const t=e.domain||e.host||e.hostname;if(t){const{host:e,hostname:i,pathname:o,port:a}=h(u(`${s}//${t}`));e&&(n.host=e,n.hostname=i,n.port=a),"/"===r&&"/"!==o&&(r=o)}}const i=e.roomName||e.room;!i||!n.pathname.endsWith("/")&&n.pathname.endsWith(`/${i}`)||(r.endsWith("/")||(r+="/"),r+=i),n.pathname=r;const{jwt:o}=e;if(o){let{search:e}=n;-1===e.indexOf("?jwt=")&&-1===e.indexOf("&jwt=")&&(e.startsWith("?")||(e=`?${e}`),1===e.length||(e+="&"),e+=`jwt=${o}`,n.search=e)}let{hash:a}=n;for(const t of["config","interfaceConfig","devices","userInfo"]){const n=l(e[`${t}Overwrite`]||e[t]||e[`${t}Override`]);if(n.length){let e=`${t}.${n.join(`&${t}.`)}`;a.length?e=`&${e}`:a="#",a+=e}}return n.hash=a,n.toString()||void 0}const f=function(e,t=!1,n="hash"){const r="search"===n?e.search:e.hash,i={},s=r&&r.substr(1).split("&")||[];if("hash"===n&&1===s.length){const e=s[0];if(e.startsWith("/")&&1===e.split("&").length)return i}return s.forEach(e=>{const n=e.split("="),r=n[0];if(!r)return;let s;try{if(s=n[1],!t){const e=decodeURIComponent(s).replace(/\\&/,"&");s="undefined"===e?void 0:JSON.parse(e)}}catch(e){return void function(e,t=""){console.error(t,e),window.onerror&&window.onerror(t,null,null,null,e)}(e,`Failed to parse URL parameter value: ${String(s)}`)}i[r]=s}),i}(window.location).jitsi_meet_external_api_id;var m=n(3),v=n.n(m);function g(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}const y={window:window.opener||window.parent},_="message";class b{constructor({postisOptions:e}={}){this.postis=v()(function(e){for(var t=1;t<arguments.length;t++){var n=null!=arguments[t]?arguments[t]:{},r=Object.keys(n);"function"==typeof Object.getOwnPropertySymbols&&(r=r.concat(Object.getOwnPropertySymbols(n).filter((function(e){return Object.getOwnPropertyDescriptor(n,e).enumerable})))),r.forEach((function(t){g(e,t,n[t])}))}return e}({},y,e)),this._receiveCallback=()=>{},this.postis.listen(_,e=>this._receiveCallback(e))}dispose(){this.postis.destroy()}send(e){this.postis.send({method:_,params:e})}setReceiveCallback(e){this._receiveCallback=e}}const w="event",L="request",O="response";class x{constructor({backend:e}={}){this._listeners=new Map,this._requestID=0,this._responseHandlers=new Map,this._unprocessedMessages=new Set,this.addListener=this.on,e&&this.setBackend(e)}_disposeBackend(){this._backend&&(this._backend.dispose(),this._backend=null)}_onMessageReceived(e){if(e.type===O){const t=this._responseHandlers.get(e.id);t&&(t(e),this._responseHandlers.delete(e.id))}else e.type===L?this.emit("request",e.data,(t,n)=>{this._backend.send({type:O,error:n,id:e.id,result:t})}):this.emit("event",e.data)}dispose(){this._responseHandlers.clear(),this._unprocessedMessages.clear(),this.removeAllListeners(),this._disposeBackend()}emit(e,...t){const n=this._listeners.get(e);let r=!1;return n&&n.size&&n.forEach(e=>{r=e(...t)||r}),r||this._unprocessedMessages.add(t),r}on(e,t){let n=this._listeners.get(e);return n||(n=new Set,this._listeners.set(e,n)),n.add(t),this._unprocessedMessages.forEach(e=>{t(...e)&&this._unprocessedMessages.delete(e)}),this}removeAllListeners(e){return e?this._listeners.delete(e):this._listeners.clear(),this}removeListener(e,t){const n=this._listeners.get(e);return n&&n.delete(t),this}sendEvent(e={}){this._backend&&this._backend.send({type:w,data:e})}sendRequest(e){if(!this._backend)return Promise.reject(new Error("No transport backend defined!"));this._requestID++;const t=this._requestID;return new Promise((n,r)=>{this._responseHandlers.set(t,({error:e,result:t})=>{void 0!==t?n(t):r(void 0!==e?e:new Error("Unexpected response format!"))}),this._backend.send({type:L,data:e,id:t})})}setBackend(e){this._disposeBackend(),this._backend=e,this._backend.setReceiveCallback(this._onMessageReceived.bind(this))}}const j={};let E;"number"==typeof f&&(j.scope=`jitsi_meet_external_api_${f}`),(window.JitsiMeetJS||(window.JitsiMeetJS={}),window.JitsiMeetJS.app||(window.JitsiMeetJS.app={}),window.JitsiMeetJS.app).setExternalTransportBackend=e=>E.setBackend(e);var C=n(4),S=n(0);function I(e,t){if(null==e)return{};var n,r,i=function(e,t){if(null==e)return{};var n,r,i={},s=Object.keys(e);for(r=0;r<s.length;r++)n=s[r],t.indexOf(n)>=0||(i[n]=e[n]);return i}(e,t);if(Object.getOwnPropertySymbols){var s=Object.getOwnPropertySymbols(e);for(r=0;r<s.length;r++)n=s[r],t.indexOf(n)>=0||Object.prototype.propertyIsEnumerable.call(e,n)&&(i[n]=e[n])}return i}function k(e,t,n){return t in e?Object.defineProperty(e,t,{value:n,enumerable:!0,configurable:!0,writable:!0}):e[t]=n,e}n.d(t,"default",(function(){return $}));const R=["css/all.css","libs/alwaysontop.min.js"],P={avatarUrl:"avatar-url",displayName:"display-name",e2eeKey:"e2ee-key",email:"email",hangup:"video-hangup",password:"password",sendEndpointTextMessage:"send-endpoint-text-message",sendTones:"send-tones",subject:"subject",submitFeedback:"submit-feedback",toggleAudio:"toggle-audio",toggleChat:"toggle-chat",toggleFilmStrip:"toggle-film-strip",toggleShareScreen:"toggle-share-screen",toggleTileView:"toggle-tile-view",toggleVideo:"toggle-video"},N={"avatar-changed":"avatarChanged","audio-availability-changed":"audioAvailabilityChanged","audio-mute-status-changed":"audioMuteStatusChanged","camera-error":"cameraError","device-list-changed":"deviceListChanged","display-name-change":"displayNameChange","email-change":"emailChange","endpoint-text-message-received":"endpointTextMessageReceived","feedback-submitted":"feedbackSubmitted","feedback-prompt-displayed":"feedbackPromptDisplayed","filmstrip-display-changed":"filmstripDisplayChanged","incoming-message":"incomingMessage","mic-error":"micError","outgoing-message":"outgoingMessage","participant-joined":"participantJoined","participant-kicked-out":"participantKickedOut","participant-left":"participantLeft","password-required":"passwordRequired","proxy-connection-event":"proxyConnectionEvent","video-ready-to-close":"readyToClose","video-conference-joined":"videoConferenceJoined","video-conference-left":"videoConferenceLeft","video-availability-changed":"videoAvailabilityChanged","video-mute-status-changed":"videoMuteStatusChanged","screen-sharing-status-changed":"screenSharingStatusChanged","dominant-speaker-changed":"dominantSpeakerChanged","subject-change":"subjectChange","suspend-detected":"suspendDetected","tile-view-changed":"tileViewChanged"};let M=0;function A(e,t){e._numberOfParticipants+=t}function D(e,t={}){return p(function(e){for(var t=1;t<arguments.length;t++){var n=null!=arguments[t]?arguments[t]:{},r=Object.keys(n);"function"==typeof Object.getOwnPropertySymbols&&(r=r.concat(Object.getOwnPropertySymbols(n).filter((function(e){return Object.getOwnPropertyDescriptor(n,e).enumerable})))),r.forEach((function(t){k(e,t,n[t])}))}return e}({},t,{url:`${t.noSSL?"http":"https"}://${e}/#jitsi_meet_external_api_id=${M}`}))}function T(e){let t;return"string"==typeof e&&null!==String(e).match(/([0-9]*\.?[0-9]+)(em|pt|px|%)$/)?t=e:"number"==typeof e&&(t=`${e}px`),t}class $ extends i.a{constructor(e,...t){super();const{roomName:n="",width:r="100%",height:i="100%",parentNode:s=document.body,configOverwrite:o={},interfaceConfigOverwrite:a={},noSSL:c=!1,jwt:u,onload:l,invitees:h,devices:d,userInfo:p,e2eeKey:f}=function(e){if(!e.length)return{};switch(typeof e[0]){case"string":case void 0:{const[t,n,r,i,s,o,a,c,u]=e;return{roomName:t,width:n,height:r,parentNode:i,configOverwrite:s,interfaceConfigOverwrite:o,noSSL:a,jwt:c,onload:u}}case"object":return e[0];default:throw new Error("Can't parse the arguments!")}}(t);this._parentNode=s,this._url=D(e,{configOverwrite:o,interfaceConfigOverwrite:a,jwt:u,noSSL:c,roomName:n,devices:d,userInfo:p}),this._createIFrame(i,r,l),this._transport=new x({backend:new b({postisOptions:{scope:`jitsi_meet_external_api_${M}`,window:this._frame.contentWindow}})}),Array.isArray(h)&&h.length>0&&this.invite(h),this._tmpE2EEKey=f,this._isLargeVideoVisible=!0,this._numberOfParticipants=0,this._participants={},this._myUserID=void 0,this._onStageParticipant=void 0,this._setupListeners(),M++}_createIFrame(e,t,n){const r=`jitsiConferenceFrame${M}`;this._frame=document.createElement("iframe"),this._frame.allow="camera; microphone; display-capture",this._frame.src=this._url,this._frame.name=r,this._frame.id=r,this._setSize(e,t),this._frame.setAttribute("allowFullScreen","true"),this._frame.style.border=0,n&&(this._frame.onload=n),this._frame=this._parentNode.appendChild(this._frame)}_getAlwaysOnTopResources(){const e=this._frame.contentWindow,t=e.document;let n="";const r=t.querySelector("base");if(r&&r.href)n=r.href;else{const{protocol:t,host:r}=e.location;n=`${t}//${r}`}return R.map(e=>new URL(e,n).href)}_getOnStageParticipant(){return this._onStageParticipant}_getLargeVideo(){const e=this.getIFrame();if(this._isLargeVideoVisible&&e&&e.contentWindow&&e.contentWindow.document)return e.contentWindow.document.getElementById("largeVideo")}_getParticipantVideo(e){const t=this.getIFrame();if(t&&t.contentWindow&&t.contentWindow.document)return void 0===e||e===this._myUserID?t.contentWindow.document.getElementById("localVideo_container"):t.contentWindow.document.querySelector(`#participant_${e} video`)}_setSize(e,t){const n=T(e),r=T(t);void 0!==n&&(this._frame.style.height=n),void 0!==r&&(this._frame.style.width=r)}_setupListeners(){this._transport.on("event",e=>{let{name:t}=e,n=I(e,["name"]);const r=n.id;switch(t){case"video-conference-joined":void 0!==this._tmpE2EEKey&&(this.executeCommand(P.e2eeKey,this._tmpE2EEKey),this._tmpE2EEKey=void 0),this._myUserID=r,this._participants[r]={avatarURL:n.avatarURL};case"participant-joined":this._participants[r]=this._participants[r]||{},this._participants[r].displayName=n.displayName,this._participants[r].formattedDisplayName=n.formattedDisplayName,A(this,1);break;case"participant-left":A(this,-1),delete this._participants[r];break;case"display-name-change":{const e=this._participants[r];e&&(e.displayName=n.displayname,e.formattedDisplayName=n.formattedDisplayName);break}case"email-change":{const e=this._participants[r];e&&(e.email=n.email);break}case"avatar-changed":{const e=this._participants[r];e&&(e.avatarURL=n.avatarURL);break}case"on-stage-participant-changed":this._onStageParticipant=r,this.emit("largeVideoChanged");break;case"large-video-visibility-changed":this._isLargeVideoVisible=n.isVisible,this.emit("largeVideoChanged");break;case"video-conference-left":A(this,-1),delete this._participants[this._myUserID]}const i=N[t];return!!i&&(this.emit(i,n),!0)})}addEventListener(e,t){this.on(e,t)}addEventListeners(e){for(const t in e)this.addEventListener(t,e[t])}dispose(){this.emit("_willDispose"),this._transport.dispose(),this.removeAllListeners(),this._frame&&this._frame.parentNode&&this._frame.parentNode.removeChild(this._frame)}executeCommand(e,...t){e in P?this._transport.sendEvent({data:t,name:P[e]}):console.error("Not supported command name.")}executeCommands(e){for(const t in e)this.executeCommand(t,e[t])}getAvailableDevices(){return Object(S.a)(this._transport)}getCurrentDevices(){return Object(S.b)(this._transport)}isAudioAvailable(){return this._transport.sendRequest({name:"is-audio-available"})}isDeviceChangeAvailable(e){return Object(S.c)(this._transport,e)}isDeviceListAvailable(){return Object(S.d)(this._transport)}isMultipleAudioInputSupported(){return Object(S.e)(this._transport)}invite(e){return Array.isArray(e)&&0!==e.length?this._transport.sendRequest({name:"invite",invitees:e}):Promise.reject(new TypeError("Invalid Argument"))}isAudioMuted(){return this._transport.sendRequest({name:"is-audio-muted"})}getAvatarURL(e){const{avatarURL:t}=this._participants[e]||{};return t}getDisplayName(e){const{displayName:t}=this._participants[e]||{};return t}getEmail(e){const{email:t}=this._participants[e]||{};return t}_getFormattedDisplayName(e){const{formattedDisplayName:t}=this._participants[e]||{};return t}getIFrame(){return this._frame}getNumberOfParticipants(){return this._numberOfParticipants}isVideoAvailable(){return this._transport.sendRequest({name:"is-video-available"})}isVideoMuted(){return this._transport.sendRequest({name:"is-video-muted"})}removeEventListener(e){this.removeAllListeners(e)}removeEventListeners(e){e.forEach(e=>this.removeEventListener(e))}sendProxyConnectionEvent(e){this._transport.sendEvent({data:[e],name:"proxy-connection-event"})}setAudioInputDevice(e,t){return Object(S.f)(this._transport,e,t)}setAudioOutputDevice(e,t){return Object(S.g)(this._transport,e,t)}setVideoInputDevice(e,t){return Object(S.h)(this._transport,e,t)}_getElectronPopupsConfig(){return Promise.resolve(C)}}}])}));
+//# sourceMappingURL=external_api.min.map
 
     var version = null;
 
-    //////////////////////////////////////////////////////////////////////////
-    // Helpers                                                              //
-    //////////////////////////////////////////////////////////////////////////
 
-    // returns an action which delays for some time
-    var delay = function(milliseconds) {
-      return function(result) {
-        return new Promise(function(resolve, reject) {
-          setTimeout(function() {
-            resolve(result);
-          }, milliseconds);
-        });
-      };
-    };
+    function getStyleHtml(withNetflix, withHulu){
+        let styleHtml = `
+          <style>
+                ${withNetflix ? ".nf-player-container" : withHulu ?
+                '.hulu-player-app' : 'body'} {
+                  width: calc(100% - 400px) !important;
+                }
+                .jitsu-video-wrapper{
+                    position: ${withNetflix? "absolute" : "fixed"};
+                    right: 0;
+                    top: 0;
+                    z-index: 2999999999;
+                    height: 100vh;
+                    width: 400px;
+                }
+                .videocontainer{
+                    width: 100% ! important;
+                    height: 25% !important
+                }
+                .remote-videos-container{height: 100% !important}
+            </style>
+            `
+        return styleHtml
+    }
+    let chatHtml =`<div class='jitsu-video-wrapper'>`
 
-    // returns an action which waits until the condition thunk returns true,
-    // rejecting if maxDelay time is exceeded
-    var delayUntil = function(condition, maxDelay) {
-      return function(result) {
-        var delayStep = 250;
-        var startTime = (new Date()).getTime();
-        var checkForCondition = function() {
-          if (condition()) {
-            return Promise.resolve(result);
-          }
-          if (maxDelay !== null && (new Date()).getTime() - startTime > maxDelay) {
-            return Promise.reject(Error('delayUntil timed out'));
-          }
-          return delay(delayStep)().then(checkForCondition);
-        };
-        return checkForCondition();
-      };
-    };
 
-    // add value to the end of array, and remove items from the beginning
-    // such that the length does not exceed limit
-    var shove = function(array, value, limit) {
-      array.push(value);
-      if (array.length > limit) {
-        array.splice(0, array.length - limit);
-      }
-    };
-
-    // compute the mean of an array of numbers
-    var mean = function(array) {
-      return array.reduce(function(a, b) { return a + b; }) / array.length;
-    };
-
-    // compute the median of an array of numbers
-    var median = function(array) {
-      return array.concat().sort()[Math.floor(array.length / 2)];
-    };
-
-    // swallow any errors from an action
-    // and log them to the console
-    var swallow = function(action) {
-      return function(result) {
-        return action(result).catch(function(e) {
-          console.error(e);
-        });
-      };
-    };
-
-    // promise.ensure(fn) method
-    // note that this method will not swallow errors
-    Promise.prototype.ensure = function(fn) {
-      return this.then(fn, function(e) {
-        fn();
-        throw e;
-      });
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // Netflix API                                                          //
-    //////////////////////////////////////////////////////////////////////////
-
-    // how many simulated UI events are currently going on
-    // don't respond to UI events unless this is 0, otherwise
-    // we will mistake simulated actions for real ones
-    var uiEventsHappening = 0;
-
-    // video duration in milliseconds
-    var lastDuration = 60 * 60 * 1000;
-    var getDuration = function() {
-      var video = jQuery('.player-video-wrapper video');
-      if (video.length > 0) {
-        lastDuration = Math.floor(video[0].duration * 1000);
-      }
-      return lastDuration;
-    };
-
-    // 'playing', 'paused', 'loading', or 'idle'
-    var getState = function() {
-      if (jQuery('.timeout-wrapper.player-active .icon-play').length > 0) {
-        return 'idle';
-      }
-      if (jQuery('.player-progress-round.player-hidden').length === 0) {
-        return 'loading';
-      }
-      if (jQuery('.player-control-button.player-play-pause.play').length === 0) {
-        return 'playing';
-      } else {
-        return 'paused';
-      }
-    };
-
-    // current playback position in milliseconds
-    var getPlaybackPosition = function() {
-      return Math.floor(jQuery('.player-video-wrapper video')[0].currentTime * 1000);
-    };
-
-    // wake up from idle mode
-    var wakeUp = function() {
-      uiEventsHappening += 1;
-      jQuery('.timeout-wrapper.player-active .icon-play').click();
-      return delayUntil(function() {
-        return getState() !== 'idle';
-      }, 2500)().ensure(function() {
-        uiEventsHappening -= 1;
-      });
-    };
-
-    // show the playback controls
-    var showControls = function() {
-      uiEventsHappening += 1;
-      var scrubber = jQuery('#scrubber-component');
-      var eventOptions = {
-        'bubbles': true,
-        'button': 0,
-        'currentTarget': scrubber[0]
-      };
-      scrubber[0].dispatchEvent(new MouseEvent('mousemove', eventOptions));
-      return delayUntil(function() {
-        return scrubber.is(':visible');
-      }, 1000)().ensure(function() {
-        uiEventsHappening -= 1;
-      });
-    };
-
-    // hide the playback controls
-    var hideControls = function() {
-      uiEventsHappening += 1;
-      var player = jQuery('#netflix-player');
-      var mouseX = 100; // relative to the document
-      var mouseY = 100; // relative to the document
-      var eventOptions = {
-        'bubbles': true,
-        'button': 0,
-        'screenX': mouseX - jQuery(window).scrollLeft(),
-        'screenY': mouseY - jQuery(window).scrollTop(),
-        'clientX': mouseX - jQuery(window).scrollLeft(),
-        'clientY': mouseY - jQuery(window).scrollTop(),
-        'offsetX': mouseX - player.offset().left,
-        'offsetY': mouseY - player.offset().top,
-        'pageX': mouseX,
-        'pageY': mouseY,
-        'currentTarget': player[0]
-      };
-      player[0].dispatchEvent(new MouseEvent('mousemove', eventOptions));
-      return delay(1)().ensure(function() {
-        uiEventsHappening -= 1;
-      });
-    };
-
-    // pause
-    var pause = function() {
-      uiEventsHappening += 1;
-      jQuery('.player-play-pause.pause').click();
-      return delayUntil(function() {
-        return getState() === 'paused';
-      }, 1000)().then(hideControls).ensure(function() {
-        uiEventsHappening -= 1;
-      });
-    };
-
-    // play
-    var play = function() {
-      uiEventsHappening += 1;
-      jQuery('.player-play-pause.play').click();
-      return delayUntil(function() {
-        return getState() === 'playing';
-      }, 2500)().then(hideControls).ensure(function() {
-        uiEventsHappening -= 1;
-      });
-    };
-
-    // freeze playback for some time and then play
-    var freeze = function(milliseconds) {
-      return function() {
-        uiEventsHappening += 1;
-        jQuery('.player-play-pause.pause').click();
-        return delay(milliseconds)().then(function() {
-          jQuery('.player-play-pause.play').click();
-        }).then(hideControls).ensure(function() {
-          uiEventsHappening -= 1;
-        });
-      };
-    };
-
-    // jump to a specific time in the video
-    var seekErrorRecent = [];
-    var seekErrorMean = 0;
-    var seek = function(milliseconds) {
-      return function() {
-        uiEventsHappening += 1;
-        var eventOptions, scrubber, oldPlaybackPosition, newPlaybackPosition;
-        return showControls().then(function() {
-          // compute the parameters for the mouse events
-          scrubber = jQuery('#scrubber-component');
-          var factor = (milliseconds - seekErrorMean) / getDuration();
-          factor = Math.min(Math.max(factor, 0), 1);
-          var mouseX = scrubber.offset().left + Math.round(scrubber.width() * factor); // relative to the document
-          var mouseY = scrubber.offset().top + scrubber.height() / 2;                  // relative to the document
-          eventOptions = {
-            'bubbles': true,
-            'button': 0,
-            'screenX': mouseX - jQuery(window).scrollLeft(),
-            'screenY': mouseY - jQuery(window).scrollTop(),
-            'clientX': mouseX - jQuery(window).scrollLeft(),
-            'clientY': mouseY - jQuery(window).scrollTop(),
-            'offsetX': mouseX - scrubber.offset().left,
-            'offsetY': mouseY - scrubber.offset().top,
-            'pageX': mouseX,
-            'pageY': mouseY,
-            'currentTarget': scrubber[0]
-          };
-
-          // make the trickplay preview show up
-          scrubber[0].dispatchEvent(new MouseEvent('mouseover', eventOptions));
-        }).then(delayUntil(function() {
-          // wait for the trickplay preview to show up
-          return jQuery('.trickplay-preview').is(':visible');
-        }, 2500)).then(function() {
-          // remember the old position
-          oldPlaybackPosition = getPlaybackPosition();
-
-          // simulate a click on the scrubber
-          scrubber[0].dispatchEvent(new MouseEvent('mousedown', eventOptions));
-          scrubber[0].dispatchEvent(new MouseEvent('mouseup', eventOptions));
-          scrubber[0].dispatchEvent(new MouseEvent('mouseout', eventOptions));
-        }).then(delayUntil(function() {
-          // wait until the seeking is done
-          newPlaybackPosition = getPlaybackPosition();
-          return Math.abs(newPlaybackPosition - oldPlaybackPosition) >= 1;
-        }, 5000)).then(function() {
-          // compute mean seek error for next time
-          var newSeekError = Math.min(Math.max(newPlaybackPosition - milliseconds, -10000), 10000);
-          shove(seekErrorRecent, newSeekError, 5);
-          seekErrorMean = mean(seekErrorRecent);
-        }).then(hideControls).ensure(function() {
-          uiEventsHappening -= 1;
-        });
-      };
-    };
-
-    //////////////////////////////////////////////////////////////////////////
-    // Socket                                                               //
-    //////////////////////////////////////////////////////////////////////////
-
-    // connection to the server
-    var socket = io('https://netflixparty-server.herokuapp.com');
-
-    // get the userId from the server
-    var userId = null;
-    socket.on('userId', function(data) {
-      if (userId === null) {
-        userId = data;
-      }
-    });
-
-    //////////////////////////////////////////////////////////////////////////
-    // Chat API                                                             //
-    //////////////////////////////////////////////////////////////////////////
-
-    // chat state
-    var messages = [];
-    var unreadCount = 0;
-    var originalTitle = document.title;
-
-    // UI constants
-    var chatSidebarWidth = 360;
-    var chatSidebarPadding = 16;
-    var avatarSize = 20;
-    var avatarPadding = 4;
-    var avatarBorder = 2;
-    var chatVericalMargin = 4;
-    var chatInputBorder = 2;
-    var chatMessageHorizontalPadding = 8;
-    var chatMessageVerticalPadding = 8;
-    var presenceIndicatorHeight = 30;
-
-    // this is the markup that needs to be injected onto the page for chat
-    var chatHtml = `
-      <style>
-        #netflix-player.with-chat {
-          width: calc(100% - ${chatSidebarWidth}px) !important;
-        }
-
-        #chat-container, #chat-container * {
-          box-sizing: border-box;
-        }
-
-        #chat-container {
-          width: ${chatSidebarWidth}px;
-          height: 100%;
-          position: absolute;
-          top: 0;
-          right: 0;
-          bottom: 0;
-          cursor: auto;
-          user-select: text;
-          -webkit-user-select: text;
-          z-index: 9999999999;
-          padding: ${chatSidebarPadding}px;
-        }
-
-        #chat-container #chat-history-container {
-          height: calc(100% - ${chatMessageVerticalPadding * 2 + avatarSize + avatarPadding * 2 + avatarBorder * 2 + chatVericalMargin * 2 + presenceIndicatorHeight}px);
-          position: relative;
-        }
-
-        #chat-container #chat-history-container #chat-history {
-          width: ${chatSidebarWidth - chatSidebarPadding * 2}px;
-          position: absolute;
-          left: 0;
-          bottom: 0;
-          max-height: 100%;
-          overflow: auto;
-        }
-
-        #chat-container #chat-history-container #chat-history .chat-message {
-          background-color: #222;
-          color: #999;
-          padding: ${chatMessageVerticalPadding}px ${chatMessageHorizontalPadding}px;
-          margin-top: ${chatVericalMargin}px;
-          border-radius: 2px;
-          word-wrap: break-word;
-          overflow: auto;
-        }
-
-        #chat-container #chat-history-container #chat-history .chat-message .chat-message-avatar {
-          float: left;
-          width: ${avatarSize + avatarPadding * 2 + avatarBorder * 2}px;
-          height: ${avatarSize + avatarPadding * 2 + avatarBorder * 2}px;
-          padding: ${avatarPadding}px;
-          border: ${avatarBorder}px solid #444;
-          border-radius: 2px;
-        }
-
-        #chat-container #chat-history-container #chat-history .chat-message .chat-message-avatar img {
-          display: block;
-          width: ${avatarSize}px;
-          height: ${avatarSize}px;
-        }
-
-        #chat-container #chat-history-container #chat-history .chat-message .chat-message-body {
-          padding-left: ${avatarSize + avatarPadding * 2 + avatarBorder * 2 + chatMessageHorizontalPadding}px;
-        }
-
-        #chat-container #chat-history-container #chat-history .chat-message.system-message .chat-message-body {
-          font-style: italic;
-          color: #666;
-        }
-
-        #chat-container #presence-indicator {
-          position: absolute;
-          left: ${chatSidebarPadding}px;
-          bottom: ${chatSidebarPadding + chatMessageVerticalPadding * 2 + avatarSize + avatarPadding * 2 + avatarBorder * 2 + chatVericalMargin}px;
-          width: ${chatSidebarWidth - chatSidebarPadding * 2}px;
-          height: ${presenceIndicatorHeight}px;
-          line-height: ${presenceIndicatorHeight}px;
-          color: #666;
-          font-style: italic;
-        }
-
-        #chat-container #chat-input-container {
-          position: absolute;
-          height: ${chatMessageVerticalPadding * 2 + avatarSize + avatarPadding * 2 + avatarBorder * 2}px;
-          left: ${chatSidebarPadding}px;
-          bottom: ${chatSidebarPadding}px;
-          width: ${chatSidebarWidth - chatSidebarPadding * 2}px;
-          background-color: #111;
-          border: ${chatInputBorder}px solid #333;
-          border-radius: 2px;
-          overflow: auto;
-          cursor: text;
-        }
-
-        #chat-container #chat-input-container #chat-input-avatar {
-          float: left;
-          width: ${avatarSize + avatarPadding * 2 + avatarBorder * 2}px;
-          height: ${avatarSize + avatarPadding * 2 + avatarBorder * 2}px;
-          padding: ${avatarPadding}px;
-          border: ${avatarBorder}px solid #333;
-          margin-left: ${chatMessageHorizontalPadding - chatInputBorder}px;
-          margin-top: ${chatMessageVerticalPadding - chatInputBorder}px;
-          margin-bottom: ${chatMessageVerticalPadding - chatInputBorder}px;
-          border-radius: 2px;
-        }
-
-        #chat-container #chat-input-container #chat-input-avatar img {
-          display: block;
-          width: ${avatarSize}px;
-          height: ${avatarSize}px;
-        }
-
-        #chat-container #chat-input-container #chat-input {
-          display: block;
-          height: ${avatarSize + avatarPadding * 2 + avatarBorder * 2 + chatMessageVerticalPadding * 2 - chatInputBorder * 2}px;
-          line-height: ${avatarSize + avatarPadding * 2 + avatarBorder * 2}px;
-          width: ${chatSidebarWidth - chatSidebarPadding * 2 - avatarSize - avatarPadding * 2 - avatarBorder * 2 - chatMessageHorizontalPadding - chatInputBorder}px;
-          margin-left: ${avatarSize + avatarPadding * 2 + avatarBorder * 2 + chatMessageHorizontalPadding - chatInputBorder}px;
-          background-color: #111;
-          border: none;
-          outline-style: none;
-          color: #999;
-          padding-top: ${chatMessageVerticalPadding - chatInputBorder}px;
-          padding-right: ${chatMessageHorizontalPadding - chatInputBorder}px;
-          padding-bottom: ${chatMessageVerticalPadding - chatInputBorder}px;
-          padding-left: ${chatMessageHorizontalPadding}px;
-        }
-      </style>
-      <div id="chat-container">
-        <div id="chat-history-container">
-          <div id="chat-history"></div>
-        </div>
-        <div id="presence-indicator">People are typing...</div>
-        <div id="chat-input-container">
-          <div id="chat-input-avatar"></div>
-          <input id="chat-input"></input>
-        </div>
-      </div>
-    `;
 
     // this is used for the chat presence feature
     var typingTimer = null;
 
     // set up the chat state, or reset the state if the system has already been set up
-    var initChat = function() {
-      if (jQuery('#chat-container').length === 0) {
-        jQuery('#netflix-player').after(chatHtml);
-        jQuery('#presence-indicator').hide();
-        var oldPageX = null;
-        var oldPageY = null;
-        jQuery('#chat-container').mousedown(function(e) {
-          oldPageX = e.pageX;
-          oldPageY = e.pageY;
-        });
-        jQuery('#chat-container').mouseup(function(e) {
-          if ((e.pageX - oldPageX) * (e.pageX - oldPageX) + (e.pageY - oldPageY) * (e.pageY - oldPageY) < 5) {
-            jQuery('#chat-input').focus();
-            e.stopPropagation();
-          }
-        });
-        jQuery('#chat-input-container').click(function(e) {
-          jQuery('#chat-input').focus();
-        });
-        jQuery('#chat-input').keydown(function(e) {
-          e.stopPropagation();
+    var initVideo = function() {
+        let  netflixEl= jQuery('.nf-player-container')
+        let hulu = jQuery('.hulu-player-app')
+        if(netflixEl.length > 0){
+            console.log('netflix is present')
+            jQuery('head').append(getStyleHtml(true))
+            netflixEl.after(chatHtml);
+        }
+        else if(hulu.length > 0){
+            jQuery('head').append(getStyleHtml(false, true))
+            hulu.after(chatHtml)
+        }
+        else{
+            let body = jQuery('body')
+             jQuery('head').append(getStyleHtml(false))
+            body.append(chatHtml)
+        }
+        let optionsForVidoApi = {
+            width: '100%',
+            height: '100%',
+            parentNode:  document.querySelector('.jitsu-video-wrapper')
 
-          if (e.which === 13) {
-            var body = jQuery('#chat-input').val().replace(/^\s+|\s+$/g, '');
-            if (body !== '') {
-              if (typingTimer !== null) {
-                clearTimeout(typingTimer);
-                typingTimer = null;
-                socket.emit('typing', { typing: false }, function() {});
-              }
-
-              jQuery('#chat-input').prop('disabled', true);
-              socket.emit('sendMessage', {
-                body: body
-              }, function() {
-                jQuery('#chat-input').val('').prop('disabled', false).focus();
-              });
-            }
-          } else {
-            if (typingTimer === null) {
-              socket.emit('typing', { typing: true }, function() {});
-            } else {
-              clearTimeout(typingTimer);
-            }
-            typingTimer = setTimeout(function() {
-              typingTimer = null;
-              socket.emit('typing', { typing: false }, function() {});
-            }, 500);
-          }
-        });
-        jQuery('#chat-input-avatar').html(`<img src="data:image/png;base64,${new Identicon(Sha256.hash(userId).substr(0, 32), avatarSize * 2, 0).toString()}" />`);
+        }
+        return new JitsiMeetExternalAPI('meet.jit.si', optionsForVidoApi)
+    }
 
         // receive messages from the server
-        socket.on('sendMessage', function(data) {
-          addMessage(data);
-        });
-
-        // receive presence updates from the server
-        socket.on('setPresence', function(data) {
-          setPresenceVisible(data.anyoneTyping);
-        });
-      } else {
-        jQuery('#chat-history').html('');
-      }
-    };
-
     // query whether the chat sidebar is visible
-    var getChatVisible = function() {
-      return jQuery('#netflix-player').hasClass('with-chat');
-    };
-
-    // show or hide the chat sidebar
-    var setChatVisible = function(visible) {
-      if (visible) {
-        jQuery('#netflix-player').addClass('with-chat');
-        jQuery('#chat-container').show();
-        if (!document.hasFocus()) {
-          clearUnreadCount();
-        }
-      } else {
-        jQuery('#chat-container').hide();
-        jQuery('#netflix-player').removeClass('with-chat');
-      }
-    };
-
-    // show or hide the "People are typing..." indicator
-    var setPresenceVisible = function(visible) {
-      if (visible) {
-        jQuery('#presence-indicator').show();
-      } else {
-        jQuery('#presence-indicator').hide();
-      }
-    };
-
-    // add a message to the chat history
-    var addMessage = function(message) {
-      messages.push(message);
-      jQuery('#chat-history').append(`
-        <div class="chat-message${ message.isSystemMessage ? ' system-message' : '' }">
-          <div class="chat-message-avatar"><img src="data:image/png;base64,${new Identicon(Sha256.hash(message.userId).substr(0, 32), avatarSize * 2, 0).toString()}" /></div>
-          <div class="chat-message-body">${message.body.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
-        </div>
-      `);
-      jQuery('#chat-history').scrollTop(jQuery('#chat-history').prop('scrollHeight'));
-      unreadCount += 1;
-      if (!document.hasFocus()) {
-        document.title = '(' + String(unreadCount) + ') ' + originalTitle;
-      }
-    };
-
-    // clear the unread count
-    var clearUnreadCount = function() {
-      if (unreadCount > 0) {
-        unreadCount = 0;
-        document.title = originalTitle;
-      }
-    };
-
-    // clear the unread count when the window is focused
-    jQuery(window).focus(function() {
-      if (getChatVisible()) {
-        clearUnreadCount();
-      }
-    });
-
-    //////////////////////////////////////////////////////////////////////////
-    // Main logic                                                           //
-    //////////////////////////////////////////////////////////////////////////
-
-    // the Netflix player be kept within this many milliseconds of our
-    // internal representation for the playback time
-    var maxTimeError = 2500;
-
-    // the session
-    var sessionId = null;
-    var lastKnownTime = null;
-    var lastKnownTimeUpdatedAt = null;
-    var ownerId = null;
-    var state = null;
-    var videoId = null;
-
-    // ping the server periodically to estimate round trip time and client-server time offset
-    var roundTripTimeRecent = [];
-    var roundTripTimeMedian = 0;
-    var localTimeMinusServerTimeRecent = [];
-    var localTimeMinusServerTimeMedian = 0;
-    var ping = function() {
-      return new Promise(function(resolve, reject) {
-        var startTime = (new Date()).getTime();
-        socket.emit('getServerTime', { version: version }, function(serverTime) {
-          var now = new Date();
-
-          // compute median round trip time
-          shove(roundTripTimeRecent, now.getTime() - startTime, 5);
-          roundTripTimeMedian = median(roundTripTimeRecent);
-
-          // compute median client-server time offset
-          shove(localTimeMinusServerTimeRecent, (now.getTime() - Math.round(roundTripTimeMedian / 2)) - (new Date(serverTime)).getTime(), 5);
-          localTimeMinusServerTimeMedian = median(localTimeMinusServerTimeRecent);
-
-          resolve();
-        });
-      });
-    };
-
-    // this function should be called periodically to ensure the Netflix
-    // player matches our internal representation of the playback state
-    var sync = function() {
-      if (sessionId === null) {
-        return Promise.resolve();
-      }
-      if (state === 'paused') {
-        var promise;
-        if (getState() === 'paused') {
-          promise = Promise.resolve();
-        } else {
-          promise = pause();
-        }
-        return promise.then(function() {
-          if (Math.abs(lastKnownTime - getPlaybackPosition()) > maxTimeError) {
-            return seek(lastKnownTime)();
-          }
-        });
-      } else {
-        return delayUntil(function() {
-          return getState() !== 'loading';
-        }, Infinity)().then(function() {
-          var localTime = getPlaybackPosition();
-          var serverTime = lastKnownTime + (state === 'playing' ? ((new Date()).getTime() - (lastKnownTimeUpdatedAt.getTime() + localTimeMinusServerTimeMedian)) : 0);
-          if (Math.abs(localTime - serverTime) > maxTimeError) {
-            return seek(serverTime + 2000)().then(function() {
-              var localTime = getPlaybackPosition();
-              var serverTime = lastKnownTime + (state === 'playing' ? ((new Date()).getTime() - (lastKnownTimeUpdatedAt.getTime() + localTimeMinusServerTimeMedian)) : 0);
-              if (localTime > serverTime && localTime <= serverTime + maxTimeError) {
-                return freeze(localTime - serverTime)();
-              } else {
-                return play();
-              }
-            });
-          } else {
-            return play();
-          }
-        });
-      }
-    };
-
-    // this is called when we need to send an update to the server
-    // waitForChange is a boolean that indicates whether we should wait for
-    // the Netflix player to update itself before we broadcast
-    var broadcast = function(waitForChange) {
-      return function() {
-        var promise;
-        if (waitForChange) {
-          var oldPlaybackPosition = getPlaybackPosition();
-          var oldState = getState();
-          promise = swallow(delayUntil(function() {
-            var newPlaybackPosition = getPlaybackPosition();
-            var newState = getState();
-            return Math.abs(newPlaybackPosition - oldPlaybackPosition) >= 250 || newState !== oldState;
-          }, 2500))();
-        } else {
-          promise = Promise.resolve();
-        }
-
-        return promise.then(delayUntil(function() {
-          return getState() !== 'loading';
-        }, Infinity)).then(function() {
-          var now = new Date();
-          var localTime = getPlaybackPosition();
-          var serverTime = lastKnownTime + (state === 'playing' ? (now.getTime() - (lastKnownTimeUpdatedAt.getTime() + localTimeMinusServerTimeMedian)) : 0);
-          var newLastKnownTime = localTime;
-          var newLastKnownTimeUpdatedAt = new Date(now.getTime() - localTimeMinusServerTimeMedian);
-          var newState = getState() === 'playing' ? 'playing' : 'paused';
-          if (state === newState && Math.abs(localTime - serverTime) < 1) {
-            return Promise.resolve();
-          } else {
-            var oldLastKnownTime = lastKnownTime;
-            var oldLastKnownTimeUpdatedAt = lastKnownTimeUpdatedAt;
-            var oldState = state;
-            lastKnownTime = newLastKnownTime;
-            lastKnownTimeUpdatedAt = newLastKnownTimeUpdatedAt;
-            state = newState;
-            return new Promise(function(resolve, reject) {
-              socket.emit('updateSession', {
-                lastKnownTime: newLastKnownTime,
-                lastKnownTimeUpdatedAt: newLastKnownTimeUpdatedAt.getTime(),
-                state: newState
-              }, function(data) {
-                if (data !== undefined && data.errorMessage !== null) {
-                  lastKnownTime = oldLastKnownTime;
-                  lastKnownTimeUpdatedAt = oldLastKnownTimeUpdatedAt;
-                  state = oldState;
-                  reject();
-                } else {
-                  resolve();
-                }
-              });
-            });
-          }
-        });
-      };
-    };
-
-    // this is called when data is received from the server
-    var receive = function(data) {
-      lastKnownTime = data.lastKnownTime;
-      lastKnownTimeUpdatedAt = new Date(data.lastKnownTimeUpdatedAt);
-      state = data.state;
-      return sync;
-    };
-
-    // the following allows us to linearize all tasks in the program to avoid interference
-    var tasks = null;
-    var tasksInFlight = 0;
-
-    var pushTask = function(task) {
-      if (tasksInFlight === 0) {
-        // why reset tasks here? in case the native promises implementation isn't
-        // smart enough to garbage collect old completed tasks in the chain.
-        tasks = Promise.resolve();
-      }
-      tasksInFlight += 1;
-      tasks = tasks.then(function() {
-        if (getState() === 'idle') {
-          swallow(wakeUp)();
-        }
-      }).then(swallow(task)).then(function() {
-        tasksInFlight -= 1;
-      });
-    };
-
-    // broadcast the playback state if there is any user activity
-    jQuery(window).mouseup(function() {
-      if (sessionId !== null && uiEventsHappening === 0) {
-        pushTask(function() {
-          return broadcast(true)().catch(sync);
-        });
-      }
-    });
-
-    jQuery(window).keydown(function() {
-      if (sessionId !== null && uiEventsHappening === 0) {
-        pushTask(function() {
-          return broadcast(true)().catch(sync);
-        });
-      }
-    });
-
-    socket.on('connect', function() {
-      pushTask(ping);
-      setInterval(function() {
-        if (tasksInFlight === 0) {
-          var newVideoId = parseInt(window.location.href.match(/^.*\/([0-9]+)\??.*/)[1]);
-          if (videoId !== null && videoId !== newVideoId) {
-            videoId = newVideoId;
-            sessionId = null;
-            setChatVisible(false);
-          }
-
-          pushTask(ping);
-          pushTask(sync);
-        }
-      }, 5000);
-    });
-
-    // if the server goes down, it can reconstruct the session with this
-    socket.on('reconnect', function() {
-      if (sessionId !== null) {
-        socket.emit('reboot', {
-          sessionId: sessionId,
-          lastKnownTime: lastKnownTime,
-          lastKnownTimeUpdatedAt: lastKnownTimeUpdatedAt.getTime(),
-          messages: messages,
-          state: state,
-          ownerId: ownerId,
-          userId: userId,
-          videoId: videoId
-        }, function(data) {
-          pushTask(receive(data));
-        });
-      }
-    });
-
-    // respond to updates from the server
-    socket.on('update', function(data) {
-      pushTask(receive(data));
-    });
 
     // interaction with the popup
-    chrome.runtime.onMessage.addListener(
-      function(request, sender, sendResponse) {
-        if (request.type === 'getInitData') {
-          version = request.data.version;
-          sendResponse({
-            sessionId: sessionId,
-            chatVisible: getChatVisible()
-          });
-          return;
-        }
-
-        if (request.type === 'createSession') {
-          socket.emit('createSession', {
-            controlLock: request.data.controlLock,
-            videoId: request.data.videoId
-          }, function(data) {
-            initChat();
-            setChatVisible(true);
-            lastKnownTime = data.lastKnownTime;
-            lastKnownTimeUpdatedAt = new Date(data.lastKnownTimeUpdatedAt);
-            messages = [];
-            sessionId = data.sessionId;
-            ownerId = request.data.controlLock ? userId : null;
-            state = data.state;
-            videoId = request.data.videoId;
-            pushTask(broadcast(false));
-            sendResponse({
-              sessionId: sessionId
-            });
-          });
-          return true;
-        }
-
-        if (request.type === 'joinSession') {
-          socket.emit('joinSession', request.data.sessionId, function(data) {
-            if (data.errorMessage) {
-              sendResponse({
-                errorMessage: data.errorMessage
-              });
-              return;
+    chrome.runtime.onMessage.addListener(function(message, sender, sendResponse){
+        if(message.type === 'areYouStillThere'){
+            sendResponse('stillHere')
+            if( !document.querySelector('.jitsu-video-wrapper')){
+                initVideo()
             }
-
-            if (data.videoId !== request.data.videoId) {
-              socket.emit('leaveSession', null, function(data) {
-                sendResponse({
-                  errorMessage: 'That session is for a different video.'
-                });
-              });
-              return;
-            }
-
-            initChat();
-            setChatVisible(true);
-            sessionId = request.data.sessionId;
-            lastKnownTime = data.lastKnownTime;
-            lastKnownTimeUpdatedAt = new Date(data.lastKnownTimeUpdatedAt);
-            messages = [];
-            for (var i = 0; i < data.messages.length; i += 1) {
-              addMessage(data.messages[i]);
-            }
-            ownerId = data.ownerId;
-            state = data.state;
-            videoId = request.data.videoId;
-            pushTask(receive(data));
-            sendResponse({});
-          });
-          return true;
+        }
+    })
+    chrome.runtime.sendMessage({type: 'scriptReady'}, function(response){
+        if(response.type === 'createSession'){
+            initVideo()
         }
 
-        if (request.type === 'leaveSession') {
-          socket.emit('leaveSession', null, function(_) {
-            sessionId = null;
-            setChatVisible(false);
-            sendResponse({});
-          });
-          return true;
-        }
+    })
 
-        if (request.type === 'showChat') {
-          if (request.data.visible) {
-            setChatVisible(true);
-          } else {
-            setChatVisible(false);
-          }
-          sendResponse({});
-        }
-      }
-    );
-  }
-})();
+}})()
