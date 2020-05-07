@@ -3,13 +3,18 @@
 
   "name": "__MSG_extName__",
   "description": "__MSG_extDescription__",
-  "version": "0.0.0.5",
+  "version": "0.0.1.1",
   "default_locale": "en",
   "permissions": [
     "activeTab",
     "declarativeContent",
     "tabs",
-    "http://*/*"
+    "webNavigation",
+    "https://meet.jit.si/*",
+    "https://www.netflix.com/*",
+    "https://www.hulu.com/*",
+    "https://www.play.hbogo.com/*",
+    "https://www.amazon.com/Amazon-Video"
   ],
   "page_action": {
     "default_icon": {

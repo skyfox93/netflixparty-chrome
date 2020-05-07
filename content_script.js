@@ -43,7 +43,7 @@
           <style>
                 ${withNetflix ? ".nf-player-container" : withHulu ?
                 '.hulu-player-app' : 'body'} {
-                  width: calc(100% - 400px) !important;
+                  width: 70vw !important;
                 }
                 .jitsu-video-wrapper{
                     position: ${withNetflix? "absolute" : "fixed"};
@@ -51,7 +51,7 @@
                     top: 0;
                     z-index: 2999999999;
                     height: 100vh;
-                    width: 400px;
+                    width: 30vw;
                 }
             </style>
             `
@@ -174,7 +174,7 @@
                 jitsiMeetApi.addListener('videoConferenceJoined',
                     function(){
                         console.log('joined call!')
-                        chrome.runtime.sendMessage({type:'userLaunchedSession'})
+                        setTimeout(()=>{chrome.runtime.sendMessage({type:'userLaunchedSession'})}, 2000)
                     }
                 )
                 jitsiMeetApi.addListener('readyToClose', function(){

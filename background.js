@@ -1,7 +1,17 @@
 'use strict';
 
 
-
+chrome.runtime.onInstalled.addListener(function(details) {
+  chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+    chrome.declarativeContent.onPageChanged.addRules([{
+      conditions: [
+        new chrome.declarativeContent.PageStateMatcher({
+        })
+      ],
+      actions: [new chrome.declarativeContent.ShowPageAction()]
+    }]);
+  });
+});
 
 
 
@@ -15,8 +25,6 @@ function sendCreateMessage(tabId){
             data: null
         })
     }
-
-
 function openInActiveTab(type, data, callback) {
     chrome.tabs.query({
       active: true,
@@ -68,8 +76,9 @@ function openInActiveTab(type, data, callback) {
                    }
                }
                chrome.tabs.executeScript(sender.tab.id, {file: 'video_chat_css.js', allFrames: true})
+
                videoChatTabId = sender.tab.id
-            }
+       }
        }
 
        if(message.type ==='userEndedSession'){
