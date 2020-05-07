@@ -9,7 +9,7 @@
     "activeTab",
     "declarativeContent",
     "tabs",
-    "https://netlfix.com/*"
+    "http://*/*"
   ],
   "page_action": {
     "default_icon": {

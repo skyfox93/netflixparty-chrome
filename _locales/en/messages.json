@@ -1,7 +1,7 @@
 {
   "extName": {
-    "message": "Sidebar Video Chat (Jitsu)",
-    "description": "Open a video chat inside another page. Compatible with Netflix, Hulu, ect."
+    "message": "Movie Night Video Chat",
+    "description": "Open a  jitsi video chat inside another page. Compatible with Netflix, Hulu, ect."
   },
   "extDescription": {
     "message": "Embedded Video Chat for netflix",
