@@ -37,10 +37,9 @@
 
     var version = null;
     var videoSessionName = null
-
+    var styleEl = document.createElement('style')
     function getStyleHtml(withNetflix, withHulu){
         let styleHtml = `
-          <style>
                 ${withNetflix ? ".nf-player-container" : withHulu ?
                 '.hulu-player-app' : 'body'} {
                   width: 70vw !important;
@@ -53,7 +52,6 @@
                     height: 100vh;
                     width: 30vw;
                 }
-            </style>
             `
         return styleHtml
     }
@@ -117,18 +115,21 @@
 
         let  netflixEl= jQuery('.nf-player-container')
         let hulu = jQuery('.hulu-player-app')
-        if(netflixEl.length > 0){
+        if(netflixEl.length > 0 && document.location.includes('https://www.netflix.com/watch')){
             console.log('netflix is present')
-            jQuery('head').append(step == 1 ? jitsiInvitationStyle : getStyleHtml(true))
+            styleEl.innerHTML = getStyleHtml(true)
+            jQuery('head').append(step == 1 ? jitsiInvitationStyle : styleEl)
             netflixEl.after(step == 1 ? getInvitationPrompt() : chatHtml);
         }
         else if(hulu.length > 0){
-            jQuery('head').append(step == 1 ? jitsiInvitationStyle : getStyleHtml(false, true))
+            styleEl.innerHTML = getStyleHtml(false, true)
+            jQuery('head').append(step == 1 ? jitsiInvitationStyle : styleEl)
             hulu.after(step == 1 ? getInvitationPrompt() : chatHtml)
         }
         else{
             let body = jQuery('body')
-             jQuery('head').append(step ==1 ? jitsiInvitationStyle : getStyleHtml(false))
+            styleEl.innerHTML = getStyleHtml(false)
+            jQuery('head').append(step ==1 ? jitsiInvitationStyle : styleEl)
             body.append(step == 1 ? getInvitationPrompt() : chatHtml)
         }
         console.log(videoSessionName)
@@ -174,7 +175,7 @@
                 jitsiMeetApi.addListener('videoConferenceJoined',
                     function(){
                         console.log('joined call!')
-                        setTimeout(()=>{chrome.runtime.sendMessage({type:'userLaunchedSession'})}, 2000)
+                        chrome.runtime.sendMessage({type:'userLaunchedSession'})
                     }
                 )
                 jitsiMeetApi.addListener('readyToClose', function(){
