@@ -165,7 +165,7 @@
     chrome.runtime.sendMessage({type: 'scriptReady'}, function(response){
         if(response.type === 'createSession'){
             videoSessionName = response.sessionName
-            if(response.promptUser = true){
+            if(response.promptUser === true){
                 initVideo(1)
             }
             else{
